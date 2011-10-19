@@ -10,4 +10,5 @@ supports "ubuntu"
 
 # OpsCode cookbook dependencies
 depends "apt" # http://community.opscode.com/cookbooks/apt
+depends "java" # http://community.opscode.com/cookbooks/java
 depends "apache2" # http://community.opscode.com/cookbooks/apache2
