@@ -31,7 +31,6 @@ apt_repository "mongodb" do
 end
 
 # Install required APT packages
-package "openjdk-6-jre"
 package "mongodb-10gen"
 
 # Create the release directory
