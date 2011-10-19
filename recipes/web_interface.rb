@@ -17,10 +17,9 @@
 # limitations under the License.
 #
 
-# TODO ct 2011-10-17 Require recipes instead of installing packages directly
 # Install required APT packages
-package "build-essential"
-package "postfix"
+include_recipe "build-essential"
+include_recipe "postfix"
 
 # Install gem dependencies
 gem_package "bundler"
