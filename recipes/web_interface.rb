@@ -72,14 +72,22 @@ end
 
 # TODO ct 2011-10-17 Use directory resource for this -- NO sudo ever!
 # Chown the Graylog2 directory to nobody/nogroup to allow web servers to serve it
-execute "sudo chown -R nobody:nogroup graylog2-web-interface-#{node["graylog2"]["web_interface"]["version"]}" do
-  cwd "#{node["graylog2"]["basedir"]}/rel"
-  not_if do
-    File.stat("#{node["graylog2"]["basedir"]}/rel/graylog2-web-interface-#{node["graylog2"]["web_interface"]["version"]}").uid == 65534
-  end
+directory "#{node["graylog2"]["basedir"]}/rel/graylog2-web-interface-#{node["graylog2"]["web_interface"]["version"]}" do
+  owner "nobody"
+  group "nogroup"
+  recursive true
   action :nothing
   subscribes :run, resources(:execute => "bundle install"), :immediately
 end
+
+#execute "sudo chown -R nobody:nogroup graylog2-web-interface-#{node["graylog2"]["web_interface"]["version"]}" do
+#  cwd "#{node["graylog2"]["basedir"]}/rel"
+#  not_if do
+#    File.stat("#{node["graylog2"]["basedir"]}/rel/graylog2-web-interface-#{node["graylog2"]["web_interface"]["version"]}").uid == 65534
+#  end
+#  action :nothing
+#  subscribes :run, resources(:execute => "bundle install"), :immediately
+#end
 
 # Stream message rake tasks
 cron "Graylog2 send stream alarms" do
