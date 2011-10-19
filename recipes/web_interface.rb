@@ -17,6 +17,7 @@
 # limitations under the License.
 #
 
+# TODO ct 2011-10-17 Require recipes instead of installing packages directly
 # Install required APT packages
 package "build-essential"
 package "postfix"
@@ -70,6 +71,7 @@ template "#{node.graylog2.basedir}/web/config/general.yml" do
   mode 0644
 end
 
+# TODO ct 2011-10-17 Use directory resource for this -- NO sudo ever!
 # Chown the Graylog2 directory to nobody/nogroup to allow web servers to serve it
 execute "sudo chown -R nobody:nogroup graylog2-web-interface-#{node.graylog2.web_interface.version}" do
   cwd "#{node.graylog2.basedir}/rel"
