@@ -27,45 +27,45 @@ gem_package "bundler"
 gem_package "rake"
 
 # Create the release directory
-directory "#{node.graylog2.basedir}/rel" do
+directory "#{node["graylog2"]["basedir"]}/rel" do
   mode 0755
   recursive true
 end
 
 # Download the desired version of Graylog2 web interface from GitHub
 remote_file "download_web_interface" do
-  path "#{node.graylog2.basedir}/rel/graylog2-web-interface-#{node.graylog2.web_interface.version}.tar.gz"
-  source "https://github.com/downloads/Graylog2/graylog2-web-interface/graylog2-web-interface-#{node.graylog2.web_interface.version}.tar.gz"
+  path "#{node["graylog2"]["basedir"]}/rel/graylog2-web-interface-#{node["graylog2"]["web_interface"]["version"]}.tar.gz"
+  source "https://github.com/downloads/Graylog2/graylog2-web-interface/graylog2-web-interface-#{node["graylog2"]["web_interface"]["version"]}.tar.gz"
   action :create_if_missing
 end
 
 # Unpack the desired version of Graylog2 web interface
-execute "tar zxf graylog2-web-interface-#{node.graylog2.web_interface.version}.tar.gz" do
-  cwd "#{node.graylog2.basedir}/rel"
-  creates "#{node.graylog2.basedir}/rel/graylog2-web-interface-#{node.graylog2.web_interface.version}/build_date"
+execute "tar zxf graylog2-web-interface-#{node["graylog2"]["web_interface"]["version"]}.tar.gz" do
+  cwd "#{node["graylog2"]["basedir"]}/rel"
+  creates "#{node["graylog2"]["basedir"]}/rel/graylog2-web-interface-#{node["graylog2"]["web_interface"]["version"]}/build_date"
   action :nothing
   subscribes :run, resources(:remote_file => "download_web_interface"), :immediately
 end
 
 # Link to the desired Graylog2 web interface version
-link "#{node.graylog2.basedir}/web" do
-  to "#{node.graylog2.basedir}/rel/graylog2-web-interface-#{node.graylog2.web_interface.version}"
+link "#{node["graylog2"]["basedir"]}/web" do
+  to "#{node["graylog2"]["basedir"]}/rel/graylog2-web-interface-#{node["graylog2"]["web_interface"]["version"]}"
 end
 
 # Perform bundle install on the newly-installed Graylog2 web interface version
 execute "bundle install" do
-  cwd "#{node.graylog2.basedir}/web"
+  cwd "#{node["graylog2"]["basedir"]}/web"
   action :nothing
-  subscribes :run, resources(:link => "#{node.graylog2.basedir}/web"), :immediately
+  subscribes :run, resources(:link => "#{node["graylog2"]["basedir"]}/web"), :immediately
 end
 
 # Create mongoid.yml
-template "#{node.graylog2.basedir}/web/config/mongoid.yml" do
+template "#{node["graylog2"]["basedir"]}/web/config/mongoid.yml" do
   mode 0644
 end
 
 # Create general.yml
-template "#{node.graylog2.basedir}/web/config/general.yml" do
+template "#{node["graylog2"]["basedir"]}/web/config/general.yml" do
   owner "nobody"
   group "nogroup"
   mode 0644
@@ -73,10 +73,10 @@ end
 
 # TODO ct 2011-10-17 Use directory resource for this -- NO sudo ever!
 # Chown the Graylog2 directory to nobody/nogroup to allow web servers to serve it
-execute "sudo chown -R nobody:nogroup graylog2-web-interface-#{node.graylog2.web_interface.version}" do
-  cwd "#{node.graylog2.basedir}/rel"
+execute "sudo chown -R nobody:nogroup graylog2-web-interface-#{node["graylog2"]["web_interface"]["version"]}" do
+  cwd "#{node["graylog2"]["basedir"]}/rel"
   not_if do
-    File.stat("#{node.graylog2.basedir}/rel/graylog2-web-interface-#{node.graylog2.web_interface.version}").uid == 65534
+    File.stat("#{node["graylog2"]["basedir"]}/rel/graylog2-web-interface-#{node["graylog2"]["web_interface"]["version"]}").uid == 65534
   end
   action :nothing
   subscribes :run, resources(:execute => "bundle install"), :immediately
@@ -84,13 +84,13 @@ end
 
 # Stream message rake tasks
 cron "Graylog2 send stream alarms" do
-  minute node[:graylog2][:stream_alarms_cron_minute]
-  action node[:graylog2][:send_stream_alarms] ? :create : :delete
-  command "cd #{node[:graylog2][:basedir]}/web && RAILS_ENV=production bundle exec rake streamalarms:send"
+  minute node["graylog2"]["stream_alarms_cron_minute"]
+  action node["graylog2"]["send_stream_alarms"] ? :create : :delete
+  command "cd #{node["graylog2"]["basedir"]}/web && RAILS_ENV=production bundle exec rake streamalarms:send"
 end
 
 cron "Graylog2 send stream subscriptions" do
-  minute node[:graylog2][:stream_subscriptions_cron_minute]
-  action node[:graylog2][:send_stream_subscriptions] ? :create : :delete
-  command "cd #{node[:graylog2][:basedir]}/web && RAILS_ENV=production bundle exec rake subscriptions:send"
+  minute node["graylog2"]["stream_subscriptions_cron_minute"]
+  action node["graylog2"]["send_stream_subscriptions"] ? :create : :delete
+  command "cd #{node["graylog2"]["basedir"]}/web && RAILS_ENV=production bundle exec rake subscriptions:send"
 end
