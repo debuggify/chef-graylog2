@@ -62,6 +62,8 @@ end
 # TODO ct 2011-10-17 is the right resource created?
 # Create graylog2.conf
 template "/etc/graylog2.conf" do
+# TODO ct 2011-10-28 FIX?
+#  source "graylog2.conf.erb"
   mode 0644
 end
 
