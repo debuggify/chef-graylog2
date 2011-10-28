@@ -60,6 +60,8 @@ end
 
 # Create mongoid.yml
 template "#{node["graylog2"]["basedir"]}/web/config/mongoid.yml" do
+# TODO ct 2011-10-28 I don't understand these template resources
+# Better use "file"?
   mode 0644
 end
 
