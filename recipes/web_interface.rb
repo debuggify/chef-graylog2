@@ -72,7 +72,6 @@ template "#{node["graylog2"]["basedir"]}/web/config/general.yml" do
   mode 0644
 end
 
-# TODO ct 2011-10-17 Use directory resource for this -- NO sudo ever!
 # Chown the Graylog2 directory to nobody/nogroup to allow web servers to serve it
 directory "#{node["graylog2"]["basedir"]}/rel/graylog2-web-interface-#{node["graylog2"]["web_interface"]["version"]}" do
   owner "nobody"
