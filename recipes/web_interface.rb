@@ -80,25 +80,3 @@ directory "#{node["graylog2"]["basedir"]}/rel/graylog2-web-interface-#{node["gra
   action :nothing
   subscribes :run, resources(:execute => "bundle install"), :immediately
 end
-
-#execute "sudo chown -R nobody:nogroup graylog2-web-interface-#{node["graylog2"]["web_interface"]["version"]}" do
-#  cwd "#{node["graylog2"]["basedir"]}/rel"
-#  not_if do
-#    File.stat("#{node["graylog2"]["basedir"]}/rel/graylog2-web-interface-#{node["graylog2"]["web_interface"]["version"]}").uid == 65534
-#  end
-#  action :nothing
-#  subscribes :run, resources(:execute => "bundle install"), :immediately
-#end
-
-# Stream message rake tasks
-cron "Graylog2 send stream alarms" do
-  minute node["graylog2"]["stream_alarms_cron_minute"]
-  action node["graylog2"]["send_stream_alarms"] ? :create : :delete
-  command "cd #{node["graylog2"]["basedir"]}/web && RAILS_ENV=production bundle exec rake streamalarms:send"
-end
-
-cron "Graylog2 send stream subscriptions" do
-  minute node["graylog2"]["stream_subscriptions_cron_minute"]
-  action node["graylog2"]["send_stream_subscriptions"] ? :create : :delete
-  command "cd #{node["graylog2"]["basedir"]}/web && RAILS_ENV=production bundle exec rake subscriptions:send"
-end
