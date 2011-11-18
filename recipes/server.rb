@@ -65,7 +65,18 @@ template "/etc/graylog2.conf" do
   mode 0644
 end
 
-# Create init.d script
+# Set MongoDB Service in place and configure with custom template
+service "mongodb" do
+  supports :restart => true
+  action [:enable, :start]
+end
+
+template "/etc/mongodb.conf" do
+  mode 0644
+  notifies :restart, resources(:service => "mongodb")
+end
+
+# Create init.d script for graylog2
 template "/etc/init.d/graylog2" do
   source "graylog2.init.erb"
   mode 0755
