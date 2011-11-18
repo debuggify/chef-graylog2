@@ -22,4 +22,4 @@ messages_collection_size = <%= node["graylog2"]["collection_size"] %>
 
 # Graylog Extended Log Format (GELF)
 use_gelf = true
-gelf_listen_port = 12201
+gelf_listen_port = <%= node["graylog2"]["gelf_listen_port"] %>
