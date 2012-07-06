@@ -83,6 +83,13 @@ template "#{node["graylog2"]["basedir"]}/web/config/general.yml" do
   mode 0644
 end
 
+# Create email.yml
+template "#{node["graylog2"]["basedir"]}/web/config/email.yml" do
+  owner "nobody"
+  group "nogroup"
+  mode 0644
+end
+
 # Chown the Graylog2 directory to nobody/nogroup to allow web servers to serve it
 directory "#{node['graylog2']['basedir']}/rel/graylog2-web-interface-#{node['graylog2']['web_interface']['version']}" do
   owner "nobody"
