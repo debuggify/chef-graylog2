@@ -35,6 +35,8 @@ end
 remote_file "download_web_interface" do
   path "#{node["graylog2"]["basedir"]}/rel/graylog2-web-interface-#{node["graylog2"]["web_interface"]["version"]}.tar.gz"
   source node["graylog2"]["web_interface"]["source"]
+  owner "root"
+  group "root"
   action :create_if_missing
 end
 
@@ -42,8 +44,8 @@ end
 execute "tar zxf graylog2-web-interface-#{node["graylog2"]["web_interface"]["version"]}.tar.gz" do
   cwd "#{node["graylog2"]["basedir"]}/rel"
   creates "#{node["graylog2"]["basedir"]}/rel/graylog2-web-interface-#{node["graylog2"]["web_interface"]["version"]}/build_date"
-  action :nothing
-  subscribes :run, resources(:remote_file => "download_web_interface"), :immediately
+  user "root"
+  group "root"
 end
 
 # Link to the desired Graylog2 web interface version
