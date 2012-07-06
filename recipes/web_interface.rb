@@ -76,7 +76,6 @@ end
 directory "#{node['graylog2']['basedir']}/rel/graylog2-web-interface-#{node['graylog2']['web_interface']['version']}" do
   owner "nobody"
   group "nogroup"
-  # TODO ct 2011-11-18 Set uid "65534" ???
   recursive true
   action :nothing
   notifies :run, resources(:execute => "bundle install"), :immediately
