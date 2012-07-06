@@ -81,14 +81,13 @@ template "/etc/init.d/graylog2" do
 end
 
 # Update the rc.d system
-execute "update-rc.d graylog2 defaults" do
-  creates "/etc/rc0.d/K20graylog2"
-  action :nothing
-  subscribes :run, resources(:template => "/etc/init.d/graylog2"), :immediately
+# START + STOP graylog2 AFTER logstash and elasticsearch (Start level 50 + Stop level 19)
+execute "update-rc.d graylog2 defaults 21 50" do
+  creates "/etc/rc0.d/K50graylog2"
 end
 
 # Service resource
 service "graylog2" do
-  supports :restart => true
-  action [:enable, :start]
+  supports :stop => true, :start => true, :restart => true
+  action [:start]
 end
