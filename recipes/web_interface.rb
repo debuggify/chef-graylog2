@@ -53,6 +53,17 @@ link "#{node["graylog2"]["basedir"]}/web" do
   to "#{node["graylog2"]["basedir"]}/rel/graylog2-web-interface-#{node["graylog2"]["web_interface"]["version"]}"
 end
 
+# Create log folder to avoid startup errors
+directory "#{node["graylog2"]["basedir"]}/web/log" do
+  mode 0755
+  recursive true
+end
+
+file "#{node["graylog2"]["basedir"]}/web/log/production.log" do
+  mode 0666
+end
+
+
 # Perform bundle install on the newly-installed Graylog2 web interface version
 execute "bundle install" do
   cwd "#{node["graylog2"]["basedir"]}/web"
