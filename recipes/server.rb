@@ -58,7 +58,6 @@ link "#{node["graylog2"]["basedir"]}/server" do
   to "#{node["graylog2"]["basedir"]}/rel/graylog2-server-#{node["graylog2"]["server"]["version"]}"
 end
 
-# TODO ct 2011-10-17 is the right resource created?
 # Create graylog2.conf
 template "/etc/graylog2.conf" do
   mode 0644
