@@ -28,7 +28,7 @@ apt_repository "mongodb" do
 end
 
 # Install required APT packages
-package "mongodb-10gen"
+package "mongodb"
 
 # Create the release directory
 directory "#{node["graylog2"]["basedir"]}/rel" do
