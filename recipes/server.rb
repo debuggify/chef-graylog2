@@ -40,6 +40,8 @@ end
 remote_file "download_server" do
   path "#{node["graylog2"]["basedir"]}/rel/graylog2-server-#{node["graylog2"]["server"]["version"]}.tar.gz"
   source node["graylog2"]["server"]["source"]
+  owner "root"
+  group "root"
   action :create_if_missing
 end
 
@@ -47,8 +49,8 @@ end
 execute "tar zxf graylog2-server-#{node["graylog2"]["server"]["version"]}.tar.gz" do
   cwd "#{node["graylog2"]["basedir"]}/rel"
   creates "#{node["graylog2"]["basedir"]}/rel/graylog2-server-#{node["graylog2"]["server"]["version"]}/build_date"
-  action :nothing
-  subscribes :run, resources(:remote_file => "download_server"), :immediately
+  user "root"
+  group "root"
 end
 
 # Link to the desired Graylog2 server version
