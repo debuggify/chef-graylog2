@@ -16,3 +16,9 @@ streamalarms:
   from: graylog2alarms@example.org
   subject: "[graylog2] Stream alarm!"
 
+<% if node["graylog2"]["livetail"]["secret"] %>
+# @see https://github.com/Graylog2/graylog2-web-interface/wiki/Live-Tail
+livetail:
+  enable: <%= node["graylog2"]["livetail"]["enable"] %>
+  secret: <%= node["graylog2"]["livetail"]["secret"] %>
+<% end %>
