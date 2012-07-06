@@ -26,6 +26,7 @@ case "$1" in
   start)
         echo -n "Starting $DESC: "
         cd $BINDIR
+        sleep 10
         ./graylog2ctl start
         echo "...started."
         ;;
@@ -38,7 +39,9 @@ case "$1" in
   restart)
         echo -n "Restarting $DESC: "
         cd $BINDIR
-        ./graylog2ctl restart
+# TODO ct 2012-03-22 Does not work as expected
+#        ./graylog2ctl restart
+        ./graylog2ctl stop; sleep 3; ./graylog2ctl start
         echo "...restarted."
         ;;
   *)
