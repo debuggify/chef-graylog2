@@ -14,7 +14,7 @@
 #
 #  Once installed, use "sudo update-rc.d graylog2 defaults" to enable!
 
-BINDIR=<%= node["graylog2"]["basedir"] %>/server/bin
+BINDIR=<%= node["graylog2"]["basedir"] %>/server/
 NAME=graylog2
 DESC=graylog2
 
@@ -22,24 +22,33 @@ test -x /usr/bin/java || exit 0
 
 set -e
 
+start(){
+    echo -n "Starting $DESC: "
+    cd $BINDIR
+    exec sudo java -jar graylog2-server.jar &
+    echo "...started."
+}
+stop() {
+    echo -n "Stopping $DESC: "
+    sudo ps ax|grep graylog2-server.jar|awk '{print $1}'| xargs sudo /bin/kill  -9  >&2 /dev/null
+    echo "...stopped."
+}
+restart(){
+    echo -n "Restarting $DESC: "
+    stop
+    start
+}
+
+
 case "$1" in
   start)
-        echo -n "Starting $DESC: "
-        cd $BINDIR
-        ./graylog2ctl start
-        echo "...started."
+        start
         ;;
   stop)
-        echo -n "Stopping $DESC: "
-        cd $BINDIR
-        ./graylog2ctl stop
-        echo "...stopped."
+        stop
         ;;
   restart)
-        echo -n "Restarting $DESC: "
-        cd $BINDIR
-        ./graylog2ctl restart
-        echo "...restarted."
+        restart
         ;;
   *)
         N=/etc/init.d/$NAME

@@ -30,6 +30,10 @@ apt_repository "mongodb" do
   action :add
 end
 
+execute "apt-get update" do
+  user "root"
+end
+
 # Install required APT packages
 package "mongodb-10gen"
 
@@ -47,10 +51,19 @@ remote_file "download_server" do
 end
 
 # Unpack the desired version of Graylog2 server
-execute "tar zxf graylog2-server-#{node["graylog2"]["server"]["version"]}.tar.gz" do
+# execute "tar zxf graylog2-server-#{node["graylog2"]["server"]["version"]}.tar.gz" do
+#   cwd "#{node["graylog2"]["basedir"]}/rel"
+#   creates "#{node["graylog2"]["basedir"]}/rel/graylog2-server-#{node["graylog2"]["server"]["version"]}/build_date"
+#   action :nothing
+#   subscribes :run, resources(:remote_file => "download_server"), :immediately
+# end
+
+# Unpack the desired version of Graylog2 server
+execute "Extract the server" do
+  command "tar zxf graylog2-server-#{node["graylog2"]["server"]["version"]}.tar.gz"
   cwd "#{node["graylog2"]["basedir"]}/rel"
   creates "#{node["graylog2"]["basedir"]}/rel/graylog2-server-#{node["graylog2"]["server"]["version"]}/build_date"
-  action :nothing
+  action :run
   subscribes :run, resources(:remote_file => "download_server"), :immediately
 end
 
